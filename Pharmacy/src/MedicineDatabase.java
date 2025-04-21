@@ -6,9 +6,9 @@ public class MedicineDatabase {
 
     static {
         // Пример данных
-        medicinePrices.put("Цитрамон", 500.0);
-        medicinePrices.put("Парацетамол", 300.0);
-        medicinePrices.put("Ибупрофен", 400.0);
+        medicinePrices.put("Цитрамон", 500.0); // 1
+        medicinePrices.put("Парацетамол", 300.0); // 2
+        medicinePrices.put("Ибупрофен", 400.0); // 3
         medicinePrices.put("Колдрекс", 900.0);
         medicinePrices.put("Фервекс", 600.0);
         medicinePrices.put("Терафлю", 200.0);

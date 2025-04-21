@@ -1,7 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+
+
 
 public class Basket extends JFrame {
     private ArrayList<String> selectedMedicines;
@@ -64,12 +68,38 @@ public class Basket extends JFrame {
         buyButton.addActionListener(e -> {
             if (selectedMedicines.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Корзина пуста!", "Ошибка", JOptionPane.WARNING_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, "Покупка совершена!", "Успех", JOptionPane.INFORMATION_MESSAGE);
-                selectedMedicines.clear();
-                updateBasket();
+                return;
             }
+
+            int userId = SessionManager.getUserId();
+            if (userId == -1) {
+                JOptionPane.showMessageDialog(this, "Ошибка: пользователь не найден.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            for (String medicineName : selectedMedicines) {
+                // Получаем id лекарства по имени
+                int medicineId = DatabaseHelper.getMedicineIdByName(medicineName);
+
+                // Если medicineId == -1, значит, лекарство не найдено
+                if (medicineId == -1) {
+                    JOptionPane.showMessageDialog(this, "Ошибка: " + medicineName + " не найдено в БД.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                    continue;
+                }
+
+                // Добавляем в таблицу user_medicines
+                boolean success = DatabaseHelper.addUserMedicines(userId, Collections.singletonList(medicineId));
+                if (!success) {
+                    JOptionPane.showMessageDialog(this, "Ошибка при сохранении лекарства: " + medicineName, "Ошибка", JOptionPane.ERROR_MESSAGE);
+                    continue;
+                }
+            }
+
+            JOptionPane.showMessageDialog(this, "Покупка совершена!", "Успех", JOptionPane.INFORMATION_MESSAGE);
+            selectedMedicines.clear();
+            updateBasket(); // Обновление корзины
         });
+
 
         buttonPanel.add(backButton);
         buttonPanel.add(clearButton);

@@ -101,8 +101,4 @@ public class CodeRes extends JFrame {
     private String generateVerificationCode() {
         return String.valueOf(new Random().nextInt(900000) + 100000);
     }
-
-    public static void main(String[] args) {
-        new CodeRes();
-    }
 }

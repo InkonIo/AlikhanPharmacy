@@ -11,10 +11,7 @@ public class MedicineSelectionWindow extends JFrame {
     public MedicineSelectionWindow(int userId, ArrayList<String> selectedMedicines) {
         this.selectedMedicines = selectedMedicines;
         this.userId = userId;
-
         System.out.println("Создано окно MedicineSelectionWindow. UserID: " + this.userId);
-
-
         DatabaseHelper.printAllUsers();
 
         // Настройка окна
@@ -62,10 +59,8 @@ public class MedicineSelectionWindow extends JFrame {
             new Basket(selectedMedicines);
         });
 
-
         buttonPanel.add(backButton);
         buttonPanel.add(basketButton);
-
         container.add(categoryScrollPane, BorderLayout.CENTER);
         container.add(buttonPanel, BorderLayout.SOUTH);
 
