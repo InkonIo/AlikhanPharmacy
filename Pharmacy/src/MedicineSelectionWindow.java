@@ -55,8 +55,6 @@ public class MedicineSelectionWindow extends JFrame {
             new ContactForm(); // возврат к логину
         });
 
-
-
         JButton basketButton = createStyledButton("Корзина", new Color(0, 123, 167), Color.WHITE);
         basketButton.addActionListener(e -> {
             dispose();
