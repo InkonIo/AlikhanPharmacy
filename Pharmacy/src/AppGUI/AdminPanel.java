@@ -12,8 +12,8 @@ import java.util.Map;
 import javax.swing.event.DocumentListener;
 
 public class AdminPanel extends JFrame {
-    private JTable productTable, userTable, orderTable;
-    private DefaultTableModel productModel, userModel, orderModel;
+    private JTable productTable, userTable;
+    private DefaultTableModel productModel, userModel;
 
     public AdminPanel() {
         try {
@@ -26,15 +26,14 @@ public class AdminPanel extends JFrame {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        getContentPane().setBackground(new Color(240, 248, 255)); // Светло-голубой фон
+        getContentPane().setBackground(new Color(240, 248, 255));
 
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.setBackground(new Color(0, 123, 167)); // Темно-голубой цвет вкладок
+        tabbedPane.setBackground(new Color(0, 123, 167));
         tabbedPane.setForeground(Color.WHITE);
 
         tabbedPane.add("Товары", createProductPanel());
         tabbedPane.add("Пользователи", createUserPanel());
-        tabbedPane.add("Заказы", createOrderPanel());
         tabbedPane.add("Аналитика", createAnalyticsPanel());
 
         add(tabbedPane);
@@ -72,26 +71,42 @@ public class AdminPanel extends JFrame {
             String priceStr = (String) productModel.getValueAt(i, 1);
             double price = Double.parseDouble(priceStr.replace(" ₸", "").trim());
 
-            // Сохранение в базе данных
             MedicineDatabase.setPrice(medicine, price);
         }
         JOptionPane.showMessageDialog(this, "Изменения сохранены!", "Успех", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void goBack() {
-        new ContactForm(); // Переход на app.ContactForm
+        new ContactForm();
         dispose();
     }
 
     private void openAddProductDialog() {
         String[] categories = {"Простуда", "Диабет", "Малыши и мамы", "Для кожи", "Витамины"};
         Map<String, String[]> medicines = Map.of(
-                "Простуда", new String[]{"Цитрамон", "Парацетамол", "Ибупрофен"},
+                "Простуда", new String[]{
+                        "Цитрамон",
+                        "Парацетамол",
+                        "Ибупрофен",
+                        "Аквамарис",
+                        "Грипофрен",
+                        "Колдрекс",
+                        "Фервекс"
+                },
                 "Диабет", new String[]{"Глюкоза", "Метформин", "Глибенкламид"},
-                "Малыши и мамы", new String[]{"Парацетамол для детей", "Нурофен для детей"},
+                "Малыши и мамы", new String[]{
+                        "Бепантен",
+                        "Панадол Бэби",
+                        "Эспумизан"  // добавил третий, так как ты ранее упоминал Эспумизан
+                },
                 "Для кожи", new String[]{"Бепантен", "Левомеколь"},
-                "Витамины", new String[]{"Витамин С", "Кальций-Д3"}
+                "Витамины", new String[]{
+                        "Аскорбинка",
+                        "Ретинол",
+                        "Тиамин"  // добавил третий витаминный препарат
+                }
         );
+
 
         JComboBox<String> categoryBox = new JComboBox<>(categories);
         JComboBox<String> medicineBox = new JComboBox<>(medicines.get(categories[0]));
@@ -102,7 +117,7 @@ public class AdminPanel extends JFrame {
             String selectedCategory = (String) categoryBox.getSelectedItem();
             medicineBox.setModel(new DefaultComboBoxModel<>(medicines.get(selectedCategory)));
             medicineBox.setSelectedIndex(0);
-            priceField.requestFocus(); // Сразу переводим фокус на поле цены
+            priceField.requestFocus();
         });
 
         priceField.getDocument().addDocumentListener(new DocumentListener() {
@@ -269,42 +284,6 @@ public class AdminPanel extends JFrame {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Ошибка удаления пользователя!", "Ошибка", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    private void resetUserPassword(boolean useDefault) {
-        int row = userTable.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Выберите пользователя!", "Ошибка", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        String email = (String) userModel.getValueAt(row, 0);
-        String newPassword = useDefault ? "Password123!" : JOptionPane.showInputDialog(this, "Введите новый пароль:", "Смена пароля", JOptionPane.QUESTION_MESSAGE);
-        if (newPassword == null || newPassword.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Пароль не может быть пустым!", "Ошибка", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:users.db");
-             PreparedStatement pstmt = conn.prepareStatement("UPDATE users SET password = ? WHERE email = ?")) {
-            pstmt.setString(1, newPassword);
-            pstmt.setString(2, email);
-            pstmt.executeUpdate();
-            userModel.setValueAt(newPassword, row, 1);
-            JOptionPane.showMessageDialog(this, "Пароль изменён! Новый пароль: " + newPassword, "Успех", JOptionPane.INFORMATION_MESSAGE);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Ошибка изменения пароля!", "Ошибка", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private JPanel createOrderPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(new Color(240, 248, 255));
-        orderModel = new DefaultTableModel(new String[]{"Заказ", "Статус"}, 0);
-        orderTable = new JTable(orderModel);
-        panel.add(new JScrollPane(orderTable), BorderLayout.CENTER);
-        return panel;
     }
 
     private JPanel createAnalyticsPanel() {

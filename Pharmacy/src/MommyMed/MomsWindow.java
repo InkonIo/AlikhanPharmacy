@@ -72,7 +72,7 @@ public class MomsWindow extends JFrame {
 
         // Добавление лекарств для категории "Малыши и мамы"
         addMedicineCard("Детский Панадол", "Обезболивающее и жаропонижающее для малышей.", "exam/src/main/resources/Images/Moms/panadol.jpg", Panadol.class);
-        addMedicineCard("Бепантен", "Мазь для ухода за детской кожей и при раздражении.", "exam/src/main/resources/Images/Moms/bepanthen.jpg", Bepanten.class);
+        addMedicineCard("Бепантен", "Мазь для ухода за детской кожей и при раздражении.", "exam/src/main/resources/Images/Moms/bepanten.jpg", Bepanten.class);
         addMedicineCard("Эспумизан Бэби", "Эффективное средство от коликов и газиков у младенцев.", "exam/src/main/resources/Images/Moms/espumizan.jpg", Espumizan.class);
 
         medicineScrollPane = new JScrollPane(medicinePanel);
