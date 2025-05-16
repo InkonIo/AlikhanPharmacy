@@ -77,28 +77,34 @@ public class Basket extends JFrame {
                 return;
             }
 
+            boolean allSuccess = true; // для итогового сообщения
+
             for (String medicineName : selectedMedicines) {
-                // Получаем id лекарства по имени
                 int medicineId = DatabaseHelper.getMedicineIdByName(medicineName);
 
-                // Если medicineId == -1, значит, лекарство не найдено
                 if (medicineId == -1) {
-                    JOptionPane.showMessageDialog(this, "Ошибка: " + medicineName + " не найдено в БД.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                    // Просто пропускаем, ничего не выводим
+                    allSuccess = false; // чтобы знать, что не всё прошло идеально
                     continue;
                 }
 
-                // Добавляем в таблицу user_medicines
                 boolean success = DatabaseHelper.addUserMedicines(userId, Collections.singletonList(medicineId));
                 if (!success) {
                     JOptionPane.showMessageDialog(this, "Ошибка при сохранении лекарства: " + medicineName, "Ошибка", JOptionPane.ERROR_MESSAGE);
-                    continue;
+                    allSuccess = false;
                 }
             }
 
-            JOptionPane.showMessageDialog(this, "Покупка совершена!", "Успех", JOptionPane.INFORMATION_MESSAGE);
+            if (allSuccess) {
+                JOptionPane.showMessageDialog(this, "Покупка совершена!", "Успех", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Покупка совершена!", "Успех", JOptionPane.INFORMATION_MESSAGE);
+            }
+
             selectedMedicines.clear();
-            updateBasket(); // Обновление корзины
+            updateBasket();
         });
+
 
 
         buttonPanel.add(backButton);

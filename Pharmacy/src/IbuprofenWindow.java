@@ -24,7 +24,7 @@ public class IbuprofenWindow extends JFrame {
         panel.setBackground(new Color(200, 230, 229));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        ImageIcon icon = new ImageIcon("D:\\JustFol\\Javis\\exam\\src\\images\\ibuprofen.png");
+        ImageIcon icon = new ImageIcon("exam/src/main/resources/Images/Prostuda/ibuprofen.jpg"); // Можно заменить путь к картинке
         Image scaledImage = icon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
         JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
 
@@ -34,7 +34,7 @@ public class IbuprofenWindow extends JFrame {
         JLabel nameLabel = new JLabel("Ибупрофен - " + price + " тг.");
         nameLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
-        JLabel descLabel = new JLabel("<html>Снимает воспаление и боль.<br>Снижает температуру.</html>");
+        JLabel descLabel = new JLabel("<html>Ибупрофен — нестероидное противовоспалительное средство,<br>обладает жаропонижающим и обезболивающим эффектом.</html>");
         descLabel.setFont(new Font("Arial", Font.PLAIN, 14));
 
         textPanel.add(nameLabel);

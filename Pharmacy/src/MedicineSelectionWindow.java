@@ -11,6 +11,7 @@ public class MedicineSelectionWindow extends JFrame {
     public MedicineSelectionWindow(int userId, ArrayList<String> selectedMedicines) {
         this.selectedMedicines = selectedMedicines;
         this.userId = userId;
+        this.userEmail = SessionManager.getUserEmail();
         System.out.println("Создано окно MedicineSelectionWindow. UserID: " + this.userId);
         DatabaseHelper.printAllUsers();
 
@@ -32,11 +33,12 @@ public class MedicineSelectionWindow extends JFrame {
         categoryPanel.setBackground(new Color(138, 209, 206));
         categoryPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        addCategoryButton("Диабет", DiabetWindow.class);
-        addCategoryButton("Малыши и мамы", MomsWindow.class);
-        addCategoryButton("Для кожи", KozhaWindow.class);
-        addCategoryButton("Простуда", SimpleWindow.class);
-        addCategoryButton("Витамины", VitaminsWindow.class);
+        // Добавление кнопок категорий с Unicode-эмодзи
+        addCategoryButton("\uD83E\uDDEA Диабет", DiabetWindow.class);          // 🩺
+        addCategoryButton("\uD83D\uDC76 Малыши и мамы", MomsWindow.class);   // 👶
+        addCategoryButton("\uD83E\uDDF4 Для кожи", KozhaWindow.class);       // 🧴
+        addCategoryButton("\uD83E\uDD27 Простуда", SimpleWindow.class);      // 🤧
+        addCategoryButton("\uD83D\uDC8A Витамины", VitaminsWindow.class);    // 💊
 
         JScrollPane categoryScrollPane = new JScrollPane(categoryPanel);
         categoryScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -48,12 +50,14 @@ public class MedicineSelectionWindow extends JFrame {
 
         JButton backButton = createStyledButton("Назад", new Color(0, 123, 167), Color.WHITE);
         backButton.addActionListener(e -> {
+            SessionManager.clearUser(); // очистка текущей сессии
             dispose();
-            new ContactForm();
+            new ContactForm(); // возврат к логину
         });
 
-        JButton basketButton = createStyledButton("Корзина", new Color(0, 123, 167), Color.WHITE);
 
+
+        JButton basketButton = createStyledButton("Корзина", new Color(0, 123, 167), Color.WHITE);
         basketButton.addActionListener(e -> {
             dispose();
             new Basket(selectedMedicines);
@@ -70,7 +74,10 @@ public class MedicineSelectionWindow extends JFrame {
     // Метод для добавления кнопки категории
     private void addCategoryButton(String categoryName, Class<?> categoryWindowClass) {
         JButton categoryButton = new JButton(categoryName);
-        categoryButton.setFont(new Font("Arial", Font.BOLD, 14));
+
+        // Универсальный шрифт для всех платформ
+        categoryButton.setFont(new Font("Dialog", Font.PLAIN, 14));
+
         categoryButton.setForeground(Color.WHITE);
         categoryButton.setBackground(new Color(0, 123, 167));
         categoryButton.setFocusPainted(false);
@@ -99,7 +106,7 @@ public class MedicineSelectionWindow extends JFrame {
     // Метод для стилизованных кнопок
     private JButton createStyledButton(String text, Color bgColor, Color fgColor) {
         JButton button = new JButton(text);
-        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.setFont(new Font("Dialog", Font.PLAIN, 14));
         button.setBackground(bgColor);
         button.setForeground(fgColor);
         button.setFocusPainted(false);

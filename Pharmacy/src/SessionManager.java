@@ -12,6 +12,12 @@ public class SessionManager {
         System.out.println("SessionManager: Установлен пользователь ID = " + userId + ", Email = " + userEmail);
     }
 
+    public static void clearUser() {
+        userId = -1;
+        userEmail = null;
+        System.out.println("SessionManager: Пользователь вышел из системы.");
+    }
+
     public static int getUserId() {
         System.out.println("SessionManager.getUserId() = " + userId);
         return userId;

@@ -5,7 +5,7 @@ public class DatabaseHelper {
     private static final String DB_URL = "jdbc:sqlite:users.db";
     private static Connection connection;
 
-    // Метод для подключения к базе данных
+    // Подключение к базе данных (синглтон)
     public static Connection connect() {
         if (connection == null || isClosed()) {
             try {
@@ -19,17 +19,17 @@ public class DatabaseHelper {
         return connection;
     }
 
-    // Проверка закрытого соединения
+    // Проверка закрытия соединения
     private static boolean isClosed() {
         try {
-            return connection.isClosed();
+            return connection == null || connection.isClosed();
         } catch (SQLException e) {
             e.printStackTrace();
             return true;
         }
     }
 
-    // Создание таблиц в базе данных
+    // Создание таблиц users, medicines, user_medicines
     public static void createTable() {
         String createUsersTable = "CREATE TABLE IF NOT EXISTS users ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -58,6 +58,38 @@ public class DatabaseHelper {
         }
     }
 
+    public static void insertSampleMedicines() {
+        String sql = "INSERT OR IGNORE INTO medicines (id, name, price) VALUES (?, ?, ?)";
+
+        Object[][] medicines = {
+                {1, "Цитрамон", 500},
+                {2, "Парацетамол", 300},
+                {3, "Ибупрофен", 400},
+                {4, "Аквамарис", 800},
+                {5, "Грипфорен", 550},
+                {6, "Колдрекс", 900},
+                {7, "Фервекс", 600}
+        };
+
+        try (Connection conn = connect();  // сохраняем и сразу используем try-with-resources
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            for (Object[] med : medicines) {
+                stmt.setInt(1, (Integer) med[0]);
+                stmt.setString(2, (String) med[1]);
+                stmt.setDouble(3, (Integer) med[2]);
+                stmt.addBatch();
+            }
+
+            stmt.executeBatch();
+            System.out.println("Лекарства добавлены (если отсутствовали).");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Вывод информации о текущем пользователе (по ID)
     public static void printAllUsers() {
         int userId = getCurrentUserId();
         if (userId == -1) {
@@ -113,11 +145,11 @@ public class DatabaseHelper {
         return userId;
     }
 
-    // Получение ID лекарства по названию
+    // Получение ID лекарства по названию (без учета регистра)
     public static int getMedicineIdByName(String name) {
-        String sql = "SELECT id FROM medicines WHERE name = ?";
+        String sql = "SELECT id FROM medicines WHERE LOWER(name) = LOWER(?)";
         try (PreparedStatement stmt = connect().prepareStatement(sql)) {
-            stmt.setString(1, name);
+            stmt.setString(1, name.trim());
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return rs.getInt("id");
@@ -128,19 +160,51 @@ public class DatabaseHelper {
         return -1;
     }
 
-    // Добавление лекарств для пользователя
     public static boolean addUserMedicines(int userId, List<Integer> selectedMedicinesIds) {
         String sql = "INSERT OR IGNORE INTO user_medicines (user_id, medicine_id) VALUES (?, ?)";
-        try (PreparedStatement stmt = connect().prepareStatement(sql)) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = connect();
+            conn.setAutoCommit(false);  // отключаем авто-коммит, начинаем транзакцию
+
+            stmt = conn.prepareStatement(sql);
             for (Integer medicineId : selectedMedicinesIds) {
                 stmt.setInt(1, userId);
                 stmt.setInt(2, medicineId);
                 stmt.addBatch();
             }
             stmt.executeBatch();
+
+            conn.commit();  // коммитим транзакцию
+
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            if (conn != null) {
+                try {
+                    conn.rollback();  // при ошибке откатываем изменения
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        } finally {
+            // Закрываем statement
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            // Восстанавливаем авто-коммит в true
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return false;
     }
@@ -152,7 +216,7 @@ public class DatabaseHelper {
         try (PreparedStatement stmt = connect().prepareStatement(sql)) {
             stmt.setString(1, email);
             ResultSet rs = stmt.executeQuery();
-            return rs.next(); // Если есть результат, email существует
+            return rs.next();
         } catch (SQLException e) {
             System.out.println("Ошибка при проверке email");
             e.printStackTrace();
@@ -160,14 +224,14 @@ public class DatabaseHelper {
         return false;
     }
 
-    // Обновление пароля
+    // Обновление пароля пользователя по email
     public static boolean updatePassword(String email, String newPassword) {
         String sql = "UPDATE users SET password = ? WHERE email = ?";
         try (PreparedStatement stmt = connect().prepareStatement(sql)) {
             stmt.setString(1, newPassword);
             stmt.setString(2, email);
             int rowsUpdated = stmt.executeUpdate();
-            return rowsUpdated > 0; // Если обновлена хотя бы 1 строка, пароль изменен
+            return rowsUpdated > 0;
         } catch (SQLException e) {
             System.out.println("Ошибка при обновлении пароля");
             e.printStackTrace();
@@ -175,14 +239,14 @@ public class DatabaseHelper {
         return false;
     }
 
-    // Проверка на валидность пароля
+    // Проверка валидности пароля (минимум 6 символов, хотя бы одна заглавная, цифра и спецсимвол)
     public static boolean isValidPassword(String password) {
         if (password == null) return false;
         String passwordPattern = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{6,}$";
         return password.matches(passwordPattern);
     }
 
-    // Проверка пользователя по email и паролю
+    // Проверка пользователя по email и паролю (логин)
     public static boolean checkUser(String email, String password) {
         String query = "SELECT id FROM users WHERE email = ? AND password = ?";
         try (PreparedStatement pstmt = connect().prepareStatement(query)) {
@@ -190,7 +254,7 @@ public class DatabaseHelper {
             pstmt.setString(2, password);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                setCurrentUserId(rs.getInt("id")); // Сохраняем текущего пользователя
+                setCurrentUserId(rs.getInt("id"));
                 return true;
             }
         } catch (SQLException e) {
@@ -199,7 +263,7 @@ public class DatabaseHelper {
         return false;
     }
 
-    // Установка текущего пользователя
+    // Текущий пользователь (статично хранится в памяти)
     private static int currentUserId = -1;
 
     public static int getCurrentUserId() {
@@ -209,5 +273,4 @@ public class DatabaseHelper {
     private static void setCurrentUserId(int userId) {
         currentUserId = userId;
     }
-
 }

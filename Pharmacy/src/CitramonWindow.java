@@ -13,7 +13,7 @@ public class CitramonWindow extends JFrame {
         this.selectedMedicines = selectedMedicines;
 
         setTitle("Цитрамон");
-        setBounds(100, 100, 500, 400);
+        setBounds(100, 100, 700, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
@@ -24,7 +24,7 @@ public class CitramonWindow extends JFrame {
         panel.setBackground(new Color(200, 230, 229));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        ImageIcon icon = new ImageIcon("D:\\JustFol\\Javis\\exam\\src\\images\\citramon.png");
+        ImageIcon icon = new ImageIcon("exam/src/main/resources/Images/Prostuda/citramon.png");
         Image scaledImage = icon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
         JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
 

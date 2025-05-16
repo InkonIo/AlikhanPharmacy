@@ -63,13 +63,13 @@ public class SimpleWindow extends JFrame {
         medicinePanel.setBackground(new Color(138, 209, 206));
         medicinePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        addMedicineButton("Цитрамон", "Обезболивающее и жаропонижающее.", "D:\\JustFol\\Javis\\exam\\src\\images\\citramon.png", CitramonWindow.class); // 1
-        addMedicineButton("Парацетамол", "Снижает температуру и боль.", "D:\\JustFol\\Javis\\exam\\src\\images\\paracetomo.png", ParacetamolWindow.class); // 2
-        addMedicineButton("Ибупрофен", "Противовоспалительное средство.", "D:\\JustFol\\Javis\\exam\\src\\images\\ibuprofen.png", IbuprofenWindow.class); // 3
-        addMedicineButton("Аквамарис", "Противовоспалительное средство.", "/images/ibuprofen.png", Aquamaris.class); // 4
-        addMedicineButton("Грипфорен", "Противовоспалительное средство.", "/images/ibuprofen.png", Grippheron.class); // 5
-        addMedicineButton("Колдрекс", "Противовоспалительное средство.", "/images/ibuprofen.png", Coldrex.class); // 6
-        addMedicineButton("Фервекс", "Противовоспалительное средство.", "/images/ibuprofen.png", Fervex.class); // 6
+        addMedicineButton("Цитрамон", "Обезболивающее и жаропонижающее.", "exam/src/main/resources/Images/Prostuda/citramon.png", CitramonWindow.class); // 1
+        addMedicineButton("Парацетамол", "Снижает температуру и боль.", "exam/src/main/resources/Images/Prostuda/paracetomo.png", ParacetamolWindow.class); // 2
+        addMedicineButton("Ибупрофен", "Противовоспалительное средство.", "exam/src/main/resources/Images/Prostuda/ibuprofen.png", IbuprofenWindow.class); // 3
+        addMedicineButton("Аквамарис", "Противовоспалительное средство.", "exam/src/main/resources/Images/Prostuda/aquamaris.jpg", Aquamaris.class); // 4
+        addMedicineButton("Грипфорен", "Противовоспалительное средство.", "exam/src/main/resources/Images/Prostuda/gripphoern.jpg", Grippheron.class); // 5
+        addMedicineButton("Колдрекс", "Противовоспалительное средство.", "exam/src/main/resources/Images/Prostuda/colder.jpg", Coldrex.class); // 6
+        addMedicineButton("Фервекс", "Противовоспалительное средство.", "exam/src/main/resources/Images/Prostuda/fervex.jpg", Fervex.class); // 6
 
         medicineScrollPane = new JScrollPane(medicinePanel);
         medicineScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
