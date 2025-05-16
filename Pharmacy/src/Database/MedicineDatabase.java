@@ -23,6 +23,10 @@ public class MedicineDatabase {
         medicinePrices.put("Панадол Бэби", 900.0);
     }
 
+    public static Map<String, Double> getAllMedicines() {
+        return new HashMap<>(medicinePrices);
+    }
+
     public static double getPrice(String medicine) {
         return medicinePrices.getOrDefault(medicine, 0.0);
     }
