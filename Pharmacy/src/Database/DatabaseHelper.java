@@ -77,10 +77,10 @@ public class DatabaseHelper {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             for (Object[] med : medicines) {
-                stmt.setInt(1, (Integer) med[0]);
-                stmt.setString(2, (String) med[1]);
-                stmt.setDouble(3, (Integer) med[2]);
-                stmt.addBatch();
+                stmt.setInt(1, (Integer) med[0]); // id
+                stmt.setString(2, (String) med[1]); // название
+                stmt.setDouble(3, (Integer) med[2]); // цена
+                stmt.addBatch(); // добавляем в партию
             }
 
             stmt.executeBatch();

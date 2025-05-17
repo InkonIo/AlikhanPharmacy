@@ -42,7 +42,7 @@ public class MedicineSelectionWindow extends JFrame {
         categoryPanel.setBackground(new Color(138, 209, 206));
         categoryPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Добавление кнопок категорий с Unicode-эмодзи
+        // Добавление кнопок категорий с уникодом эмодзи
         addCategoryButton("\uD83E\uDDEA Диабет", DiabetWindow.class);          // 🩺
         addCategoryButton("\uD83D\uDC76 Малыши и мамы", MomsWindow.class);   // 👶
         addCategoryButton("\uD83E\uDDF4 Для кожи", KozhaWindow.class);       // 🧴
@@ -61,7 +61,7 @@ public class MedicineSelectionWindow extends JFrame {
         backButton.addActionListener(e -> {
             SessionManager.clearUser(); // очистка текущей сессии
             dispose();
-            new ContactForm(); // возврат к логину
+            new ContactForm();
         });
 
         JButton basketButton = createStyledButton("Корзина", new Color(0, 123, 167), Color.WHITE);

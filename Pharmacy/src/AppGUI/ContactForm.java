@@ -128,7 +128,7 @@ public class ContactForm extends JFrame {
             if ("Ali".equals(email) && "01".equals(password)) {
                 JOptionPane.showMessageDialog(null, "Вход успешен, Привет, Админ!", "Успех", JOptionPane.INFORMATION_MESSAGE);
                 dispose();
-                new AdminPanel(); // Открываем окно админки
+                new AdminPanel();
                 return;
             }
 

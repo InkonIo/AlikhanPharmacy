@@ -18,8 +18,8 @@ public class Basket extends JFrame {
     private JLabel totalLabel;
 
     public Basket(ArrayList<String> selectedMedicines) {
-        this.userId = SessionManager.getUserId(); // Получаем ID из app.SessionManager
-        this.userEmail = SessionManager.getUserEmail(); // Получаем email из app.SessionManager
+        this.userId = SessionManager.getUserId(); // Получаем айдишку из AppGUI.SessionManager
+        this.userEmail = SessionManager.getUserEmail(); // Получаем email из AppGUI.SessionManager
 
         if (this.userId == -1 || this.userEmail == null) {
             System.err.println("Ошибка: Пользователь не найден в сессии!");
@@ -86,7 +86,7 @@ public class Basket extends JFrame {
                 int medicineId = DatabaseHelper.getMedicineIdByName(medicineName);
 
                 if (medicineId == -1) {
-                    // Просто пропускаем, ничего не выводим
+                    // Просто пропускаем, чтобы дальше ничего не было
                     allSuccess = false; // чтобы знать, что не всё прошло идеально
                     continue;
                 }

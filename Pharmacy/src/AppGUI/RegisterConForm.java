@@ -32,7 +32,7 @@ public class RegisterConForm extends JFrame {
         container.setLayout(new BorderLayout());
 
         // Панель заголовка
-        JPanel headerPanel = new JPanel(new GridLayout(3, 1)); // Увеличено на 3 строки
+        JPanel headerPanel = new JPanel(new GridLayout(3, 1));
         headerPanel.setBackground(new Color(138, 209, 206));
         JLabel titleLabel = new JLabel("Регистрация", JLabel.CENTER);
         titleLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -44,7 +44,7 @@ public class RegisterConForm extends JFrame {
         reminderLabel.setForeground(new Color(255, 140, 0)); // Оранжевый цвет
         headerPanel.add(titleLabel);
         headerPanel.add(subtitleLabel);
-        headerPanel.add(reminderLabel); // Добавление нового текста
+        headerPanel.add(reminderLabel);
 
         // Панель формы с градиентом
         JPanel formPanel = new JPanel(new GridBagLayout()) {
